@@ -1,14 +1,19 @@
-import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { notFound, errorHandler } from "./middlewares/errorHandler";
+import express, { Request, Response } from "express";
+import { errorHandler, notFound } from "./middlewares/errorHandler";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/", (request: Request, response: Response) => {
 	response.json("Welcome to Bisblog API");
 });
+
+app.use("/api/auth", authRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
