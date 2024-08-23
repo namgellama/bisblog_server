@@ -1,0 +1,21 @@
+{
+	"name": "bisblog_server",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc --build",
+		"start": "node ./build/src/index.js",
+		"dev": "nodemon ./src/index.ts"
+	},
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"express": "^4.19.2"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.21",
+		"nodemon": "^3.1.4",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.5.4"
+	}
+}
