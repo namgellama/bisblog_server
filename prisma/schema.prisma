@@ -19,4 +19,15 @@ model User {
   firstName String @db.VarChar(255)
   lastName  String @db.VarChar(255)
   password  String @db.VarChar(255)
+
+  posts Post[]
+}
+
+model Post {
+  id     String @id @default(uuid())
+  title  String @db.VarChar(255)
+  body   String @db.Text
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

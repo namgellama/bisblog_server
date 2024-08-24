@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import asyncHandler from "../middlewares/asyncHandler";
 import prisma from "../prismaClient";
 import { generateToken, hashPassword, verifyPassword } from "../utils/authUtil";
-import ms from "ms";
 
 interface RegisterRequestDTO {
 	email: string;
