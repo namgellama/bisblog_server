@@ -23,6 +23,7 @@ model User {
   email     String @unique @db.VarChar(255)
   firstName String @db.VarChar(255)
   lastName  String @db.VarChar(255)
+  userName  String @unique @default("") @db.VarChar(20)
   password  String @db.VarChar(255)
   role      Role   @default(Blogger)
 

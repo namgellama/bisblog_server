@@ -77,6 +77,7 @@ const currentUser = asyncHandler(
 			},
 			select: {
 				id: true,
+				userName: true,
 				email: true,
 				firstName: true,
 				lastName: true,
