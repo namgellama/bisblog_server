@@ -38,4 +38,41 @@ const createUpvote = asyncHandler(
 	}
 );
 
-export { createUpvote };
+const deleteUpvote = asyncHandler(
+	async (request: Request<{ id: string }>, response: Response) => {
+		const post = await prisma.post.findUnique({
+			where: { id: request.params.id },
+		});
+
+		if (post) {
+			const existingUpvote = await prisma.upvote.findFirst({
+				where: {
+					AND: [{ postId: post.id, userId: request.user.id }],
+				},
+			});
+
+			console.log(existingUpvote);
+
+			if (existingUpvote) {
+				await prisma.upvote.delete({
+					where: {
+						id: existingUpvote.id,
+					},
+				});
+
+				response
+					.status(204)
+					.json({ message: "Upvote removed.", data: null });
+			} else {
+				response
+					.status(404)
+					.json({ message: "Upvote not found.", data: null });
+			}
+		} else {
+			response.status(404);
+			throw new Error("Post not found.");
+		}
+	}
+);
+
+export { createUpvote, deleteUpvote };

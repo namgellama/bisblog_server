@@ -7,7 +7,7 @@ import {
 	updatePost,
 } from "../controllers/postController";
 import { protect } from "../middlewares/authMiddleware";
-import { createUpvote } from "../controllers/upvoteController";
+import { createUpvote, deleteUpvote } from "../controllers/upvoteController";
 
 const router = express.Router();
 
@@ -18,6 +18,9 @@ router
 	.get(getSinglePost)
 	.put(protect, updatePost)
 	.delete(protect, deletePost);
-router.route("/:id/upvotes").post(protect, createUpvote);
+router
+	.route("/:id/upvotes")
+	.post(protect, createUpvote)
+	.delete(protect, deleteUpvote);
 
 export default router;
