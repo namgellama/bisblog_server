@@ -69,4 +69,22 @@ const logout = asyncHandler(async (request: Request, response: Response) => {
 	response.status(200).json({ message: "Logged out successfully" });
 });
 
-export { register, login, logout };
+const currentUser = asyncHandler(
+	async (request: Request, response: Response) => {
+		const user = await prisma.user.findUnique({
+			where: {
+				id: request.user.id,
+			},
+			select: {
+				id: true,
+				email: true,
+				firstName: true,
+				lastName: true,
+			},
+		});
+
+		response.status(200).json(user);
+	}
+);
+
+export { register, login, logout, currentUser };
