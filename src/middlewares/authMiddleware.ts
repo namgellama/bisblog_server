@@ -22,13 +22,24 @@ const protect = asyncHandler(
 				next();
 			} catch (error) {
 				response.status(401);
-				throw new Error("Not authorized, token failed");
+				throw new Error("Not authorized, token failed.");
 			}
 		} else {
 			response.status(401);
-			throw new Error("Not authroized, no token");
+			throw new Error("Not authroized, no token.");
 		}
 	}
 );
 
-export { protect };
+const admin = asyncHandler(
+	async (request: Request, response: Response, next: NextFunction) => {
+		if (request.user && request.user.role == "Admin") {
+			next();
+		} else {
+			response.status(401);
+			throw new Error("Not authorized as an admin.");
+		}
+	}
+);
+
+export { protect, admin };
