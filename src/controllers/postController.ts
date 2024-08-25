@@ -8,6 +8,21 @@ interface PostRequestDTO {
 	userId: string;
 }
 
+const getAllPosts = asyncHandler(
+	async (request: Request, response: Response) => {
+		const posts = await prisma.post.findMany({
+			include: {
+				user: {
+					select: {
+						userName: true,
+					},
+				},
+			},
+		});
+		response.status(200).json(posts);
+	}
+);
+
 const createPost = asyncHandler(
 	async (request: Request<{}, {}, PostRequestDTO>, response: Response) => {
 		const { title, body } = request.body;
@@ -24,4 +39,4 @@ const createPost = asyncHandler(
 	}
 );
 
-export { createPost };
+export { createPost, getAllPosts };
