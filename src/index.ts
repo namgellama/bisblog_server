@@ -4,7 +4,6 @@ import { errorHandler, notFound } from "./middlewares/errorHandler";
 import authRoutes from "./routes/authRoutes";
 import postRoutes from "./routes/postRoutes";
 import cookieParser from "cookie-parser";
-import upvoteRoutes from "./routes/upvoteRoutes";
 
 dotenv.config();
 
@@ -19,7 +18,6 @@ app.get("/", (request: Request, response: Response) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
-app.use("/api/upvotes", upvoteRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

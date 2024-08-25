@@ -27,15 +27,9 @@ const createUpvote = asyncHandler(
 					.status(201)
 					.json({ message: "Upvote added.", data: newUpvote });
 			} else {
-				await prisma.upvote.delete({
-					where: {
-						id: existingUpvote.id,
-					},
-				});
-
 				response
 					.status(200)
-					.json({ message: "Upvote removed.", data: null });
+					.json({ message: "Upvote already exists.", data: null });
 			}
 		} else {
 			response.status(404);
