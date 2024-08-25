@@ -28,6 +28,21 @@ const getAllPosts = asyncHandler(
 	}
 );
 
+const getSinglePost = asyncHandler(
+	async (request: Request<{ id: string }>, response: Response) => {
+		const post = await prisma.post.findUnique({
+			where: { id: request.params.id },
+		});
+
+		if (post) {
+			response.status(200).json(post);
+		} else {
+			response.status(404);
+			throw new Error("Post not found.");
+		}
+	}
+);
+
 const createPost = asyncHandler(
 	async (
 		request: Request<{}, {}, CreatePostRequestDTO>,
@@ -84,4 +99,4 @@ const updatePost = asyncHandler(
 	}
 );
 
-export { createPost, getAllPosts, updatePost };
+export { createPost, getAllPosts, getSinglePost, updatePost };
