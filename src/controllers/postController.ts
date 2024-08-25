@@ -99,4 +99,25 @@ const updatePost = asyncHandler(
 	}
 );
 
-export { createPost, getAllPosts, getSinglePost, updatePost };
+const deletePost = asyncHandler(
+	async (request: Request<{ id: string }>, response: Response) => {
+		const post = await prisma.post.findUnique({
+			where: { id: request.params.id },
+		});
+
+		if (post) {
+			if (post.userId == request.user.id) {
+				await prisma.post.delete({ where: { id: request.params.id } });
+				response.sendStatus(204);
+			} else {
+				response.status(403);
+				throw new Error("Forbidden.");
+			}
+		} else {
+			response.status(404);
+			throw new Error("Post not found.");
+		}
+	}
+);
+
+export { createPost, getAllPosts, getSinglePost, updatePost, deletePost };

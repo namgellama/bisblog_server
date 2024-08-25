@@ -1,6 +1,7 @@
 import express from "express";
 import {
 	createPost,
+	deletePost,
 	getAllPosts,
 	getSinglePost,
 	updatePost,
@@ -10,8 +11,11 @@ import { protect } from "../middlewares/authMiddleware";
 const router = express.Router();
 
 router.route("/").get(getAllPosts);
-router.route("/:id").get(getSinglePost);
 router.route("/").post(protect, createPost);
-router.route("/:id").put(protect, updatePost);
+router
+	.route("/:id")
+	.get(getSinglePost)
+	.put(protect, updatePost)
+	.delete(protect, deletePost);
 
 export default router;
