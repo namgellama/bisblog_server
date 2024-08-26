@@ -2,21 +2,21 @@ import { Request, Response } from "express";
 import asyncHandler from "../middlewares/asyncHandler";
 import prisma from "../prismaClient";
 
-const createUpvote = asyncHandler(
+const createDownvote = asyncHandler(
 	async (request: Request<{ id: string }>, response: Response) => {
 		const post = await prisma.post.findUnique({
 			where: { id: request.params.id },
 		});
 
 		if (post) {
-			const existingUpvote = await prisma.upvote.findFirst({
+			const existingDownvote = await prisma.downvote.findFirst({
 				where: {
 					AND: [{ postId: post.id, userId: request.user.id }],
 				},
 			});
 
-			if (!existingUpvote) {
-				const newUpvote = await prisma.upvote.create({
+			if (!existingDownvote) {
+				const newDownvote = await prisma.downvote.create({
 					data: {
 						postId: post.id,
 						userId: request.user.id,
@@ -25,11 +25,11 @@ const createUpvote = asyncHandler(
 
 				response
 					.status(201)
-					.json({ message: "Upvote added.", data: newUpvote });
+					.json({ message: "Downvote added.", data: newDownvote });
 			} else {
 				response
 					.status(200)
-					.json({ message: "Upvote already exists.", data: null });
+					.json({ message: "Downvote already exists.", data: null });
 			}
 		} else {
 			response.status(404);
@@ -38,33 +38,33 @@ const createUpvote = asyncHandler(
 	}
 );
 
-const deleteUpvote = asyncHandler(
+const deleteDownvote = asyncHandler(
 	async (request: Request<{ id: string }>, response: Response) => {
 		const post = await prisma.post.findUnique({
 			where: { id: request.params.id },
 		});
 
 		if (post) {
-			const existingUpvote = await prisma.upvote.findFirst({
+			const existingDownvote = await prisma.downvote.findFirst({
 				where: {
 					AND: [{ postId: post.id, userId: request.user.id }],
 				},
 			});
 
-			if (existingUpvote) {
-				await prisma.upvote.delete({
+			if (existingDownvote) {
+				await prisma.downvote.delete({
 					where: {
-						id: existingUpvote.id,
+						id: existingDownvote.id,
 					},
 				});
 
 				response
 					.status(204)
-					.json({ message: "Upvote removed.", data: null });
+					.json({ message: "Downvote removed.", data: null });
 			} else {
 				response
 					.status(404)
-					.json({ message: "Upvote not found.", data: null });
+					.json({ message: "Downvote not found.", data: null });
 			}
 		} else {
 			response.status(404);
@@ -73,4 +73,4 @@ const deleteUpvote = asyncHandler(
 	}
 );
 
-export { createUpvote, deleteUpvote };
+export { createDownvote, deleteDownvote };
