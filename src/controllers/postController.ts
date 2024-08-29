@@ -19,7 +19,7 @@ const getAllPosts = asyncHandler(
 			include: {
 				user: {
 					select: {
-						userName: true,
+						username: true,
 					},
 				},
 			},

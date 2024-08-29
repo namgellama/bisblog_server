@@ -5,6 +5,7 @@ import { generateToken, hashPassword, verifyPassword } from "../utils/authUtil";
 
 interface RegisterRequestDTO {
 	email: string;
+	username: string;
 	firstName: string;
 	lastName: string;
 	password: string;
@@ -20,7 +21,7 @@ const register = asyncHandler(
 		request: Request<{}, {}, RegisterRequestDTO>,
 		response: Response
 	) => {
-		const { email, firstName, lastName, password } = request.body;
+		const { email, username, firstName, lastName, password } = request.body;
 
 		const user = await prisma.user.findUnique({ where: { email } });
 
@@ -28,6 +29,7 @@ const register = asyncHandler(
 			const newUser = await prisma.user.create({
 				data: {
 					email,
+					username,
 					firstName,
 					lastName,
 					password: await hashPassword(password),
@@ -48,17 +50,17 @@ const login = asyncHandler(
 
 		const user = await prisma.user.findFirst({
 			where: {
-				OR: [{ email: emailOrUsername }, { userName: emailOrUsername }],
+				OR: [{ email: emailOrUsername }, { username: emailOrUsername }],
 			},
 		});
 
 		if (user && (await verifyPassword(password, user.password))) {
 			generateToken(response, user.id);
-			const { id, email, userName, firstName, lastName } = user;
+			const { id, email, username, firstName, lastName } = user;
 
 			response
 				.status(200)
-				.json({ id, email, userName, firstName, lastName });
+				.json({ id, email, username, firstName, lastName });
 		} else {
 			response.status(401);
 			throw new Error("Invalid email/username or password.");
@@ -83,7 +85,7 @@ const currentUser = asyncHandler(
 			},
 			select: {
 				id: true,
-				userName: true,
+				username: true,
 				email: true,
 				firstName: true,
 				lastName: true,
