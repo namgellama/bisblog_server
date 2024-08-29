@@ -11,7 +11,7 @@ interface RegisterRequestDTO {
 }
 
 interface LoginRequestDTO {
-	email: string;
+	emailOrUsername: string;
 	password: string;
 }
 
@@ -44,18 +44,24 @@ const register = asyncHandler(
 
 const login = asyncHandler(
 	async (request: Request<{}, {}, LoginRequestDTO>, response: Response) => {
-		const { email, password } = request.body;
+		const { emailOrUsername, password } = request.body;
 
-		const user = await prisma.user.findUnique({ where: { email } });
+		const user = await prisma.user.findFirst({
+			where: {
+				OR: [{ email: emailOrUsername }, { userName: emailOrUsername }],
+			},
+		});
 
 		if (user && (await verifyPassword(password, user.password))) {
 			generateToken(response, user.id);
-			const { id, email, firstName, lastName } = user;
+			const { id, email, userName, firstName, lastName } = user;
 
-			response.status(200).json({ id, firstName, lastName, email });
+			response
+				.status(200)
+				.json({ id, email, userName, firstName, lastName });
 		} else {
 			response.status(401);
-			throw new Error("Invalid email or password.");
+			throw new Error("Invalid email/username or password.");
 		}
 	}
 );
