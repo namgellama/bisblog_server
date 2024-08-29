@@ -4,6 +4,7 @@ import { errorHandler, notFound } from "./middlewares/errorHandler";
 import authRoutes from "./routes/authRoutes";
 import postRoutes from "./routes/postRoutes";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 dotenv.config();
 
@@ -11,6 +12,11 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+	cors({
+		origin: ["http://localhost:5173"],
+	})
+);
 
 app.get("/", (request: Request, response: Response) => {
 	response.json("Welcome to Bisblog API");
